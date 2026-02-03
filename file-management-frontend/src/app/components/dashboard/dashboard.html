@@ -1,0 +1,72 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1>📁 MyDocs</h1>
+      <div class="user-info">
+        <span>Welcome, {{ currentUser?.username }}</span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div *ngIf="message" [class]="'alert alert-' + messageType">
+    {{ message }}
+  </div>
+
+  <div class="upload-section">
+    <h2>Upload New File</h2>
+    <div class="upload-form">
+      <input 
+        type="file" 
+        id="fileInput"
+        (change)="onFileSelected($event)"
+        class="file-input"
+      />
+      <button 
+        class="btn-upload" 
+        (click)="uploadFile()"
+        [disabled]="!selectedFile || isUploading"
+      >
+        {{ isUploading ? 'Uploading...' : 'Upload File' }}
+      </button>
+    </div>
+    <p *ngIf="selectedFile" class="selected-file">
+      Selected: {{ selectedFile.name }} ({{ formatSize(selectedFile.size) }})
+    </p>
+  </div>
+
+  <div class="documents-section">
+    <h2>Your Files ({{ documents.length }})</h2>
+    
+    <div *ngIf="documents.length === 0" class="no-documents">
+      <p>No files uploaded yet. Upload your first file above!</p>
+    </div>
+
+    <div class="documents-grid" *ngIf="documents.length > 0">
+      <div class="document-card" *ngFor="let doc of documents">
+        <div class="document-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+        </div>
+        <div class="document-info">
+          <h3>{{ doc.filename }}</h3>
+          <p class="document-meta">
+            <span>{{ formatSize(doc.filesize) }}</span>
+            <span>•</span>
+            <span>{{ formatDate(doc.uploadedAt) }}</span>
+          </p>
+        </div>
+        <div class="document-actions">
+          <button class="btn-download" (click)="downloadFile(doc)">
+            Download
+          </button>
+          <button class="btn-delete" (click)="deleteFile(doc.id)">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
