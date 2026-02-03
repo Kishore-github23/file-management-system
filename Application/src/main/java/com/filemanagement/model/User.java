@@ -1,10 +1,7 @@
 package com.filemanagement.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +9,6 @@ import java.util.List;
 @Entity
 @Table(name="users")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 
 public class User {
 	
@@ -30,14 +25,13 @@ public class User {
 	@Column(nullable=false)
 	private String password;// Will be stored as Bcrypt hash
 	
-	@Column(name="created_at")
 	private LocalDateTime createdAt;
 	
-	@OneToMany(mappedBy="user",cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<Document>documents=new ArrayList<>();
+	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
+	private List<FileEntity>documents=new ArrayList<>();
 	
 	@PrePersist
-	protected void onCreate() {
+	void onCreate() {
 		createdAt=LocalDateTime.now();
 	}
 	
